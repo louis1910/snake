@@ -36,8 +36,8 @@ struct Snake{
 void snake_init(Snake &snake, Bait &bait){
 	
 	snake.total_dot = 1;
-	snake.dot[0].x = 0;
-	snake.dot[0].y = 0;
+	snake.dot[0].x = 5;
+	snake.dot[0].y = 5;
 	snake.state = RIGHT;
 	
 	bait.position.x = 10;
@@ -69,9 +69,24 @@ void snake_init(Snake &snake, Bait &bait){
 //	printf("x");
 //}
 
+int compare_coordinates(Coordinates s1, Coordinates s2){
+	if(s1.x == s2.x && s1.y == s2.y){
+		return 1;
+	}
+	return 0;
+}
 
 void snake_presented(Snake snake, Bait &bait){
 	clrscr;
+	
+	for(int i = 0; i < consoleHeight; i++){
+		gotoXY(consoleWidth, i);
+		putchar(179);
+	}
+	for(int i = 0; i < consoleWidth; i++){
+		gotoXY(i, consoleHeight);
+		putchar(179);
+	}
 	
 	gotoXY(bait.position.x, bait.position.y);
 	putchar('A');
@@ -80,9 +95,21 @@ void snake_presented(Snake snake, Bait &bait){
 		gotoXY(snake.dot[i].x, snake.dot[i].y);
 		putchar('*');
 	}
-	
-
 }
+
+//void game_over(){
+//			for(int i = snake.total_dot; i > 0; i--){
+//			if(compare_coordinates(snake.dot[i], border)){
+//				break;
+//			}
+//		};
+//		
+//				Coordinates border;
+//		
+//		border.x = consoleWidth;
+//		border.y = i;
+//		
+//}
 
 void snake_behavior(Snake &snake){
 	
@@ -120,15 +147,14 @@ void snake_behavior(Snake &snake){
 			
 }
 
-int compare_coordinates(Coordinates s1, Coordinates s2){
-	if(s1.x == s2.x && s1.y == s2.y){
-		return 1;
-	}
-	return 0;
-}
+
 
 void snake_eating(Snake &snake, Bait &bait){
-	if(compare_coordinates(snake.dot[0], bait.position)){
+	if(compare_coordinates(snake.dot[0], bait.position)){	
+				
+		for (int i = snake.total_dot; i > 0; i--)
+			snake.dot[i] = snake.dot[i-1];
+					
 		snake.total_dot++;
 	}
 }
