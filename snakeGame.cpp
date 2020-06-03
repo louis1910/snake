@@ -33,51 +33,55 @@ struct Snake{
 	State state;
 };
 
-void snake_init(Snake &snake){
+void snake_init(Snake &snake, Bait &bait){
 	
 	snake.total_dot = 1;
 	snake.dot[0].x = 0;
 	snake.dot[0].y = 0;
 	snake.state = RIGHT;
 	
-}
-
-void bait_appear(Bait &bait){
-	
-	srand(time(NULL));
-	int s = rand();
-	
-	bait.position.x = s%40;
-	bait.position.y = s%25;
+	bait.position.x = 10;
+	bait.position.y = 10;
 	
 }
 
-Bait bait_renew(int c, Bait bait){
-	switch(c){
-		case 0: break;
-		case 1: bait_appear(bait); break;
-		default: break;
-	}
-}
+//void bait_appear(Bait &bait){
+//	
+//	srand(time(NULL));
+//	int s = rand();
+//	
+//	bait.position.x = s%40;
+//	bait.position.y = s%25;
+//	
+//}
 
-void bait_presented(Bait bait){
-	clrscr;
-	gotoXY(bait.position.x, bait.position.y);
-	printf("x");
-}
+//Bait bait_renew(int c, Bait bait){
+//	switch(c){
+//		case 0: break;
+//		case 1: bait_appear(bait); break;
+//		default: break;
+//	}
+//}
+
+//void bait_presented(Bait bait){
+//	clrscr;
+//	gotoXY(bait.position.x, bait.position.y);
+//	printf("x");
+//}
 
 
 void snake_presented(Snake snake, Bait &bait){
 	clrscr;
-
+	
+	gotoXY(bait.position.x, bait.position.y);
+	putchar('A');
+	
 	for(int i = 0; i < snake.total_dot; i++){
 		gotoXY(snake.dot[i].x, snake.dot[i].y);
-		printf("*");
+		putchar('*');
 	}
 	
-	bait.position = {10, 5};
-	gotoXY(bait.position.x, bait.position.y);
-	printf("x");
+
 }
 
 void snake_behavior(Snake &snake){
@@ -124,10 +128,12 @@ int compare_coordinates(Coordinates s1, Coordinates s2){
 }
 
 void snake_eating(Snake &snake, Bait &bait){
-	if(compare_coordinates(snake.dot[0],bait.position)){
+	if(compare_coordinates(snake.dot[0], bait.position)){
 		snake.total_dot++;
 	}
 }
+
+
 
 
 
@@ -138,7 +144,7 @@ int main(){
 	Snake snake;
 	Bait bait;
 	
-	snake_init(snake);
+	snake_init(snake, bait);
 	
 	
 	while(1){
