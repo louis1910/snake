@@ -6,8 +6,8 @@
 #include <conio.h>
 #include <time.h>
 
-#define consoleWidth 40
-#define consoleHeight 25
+#define consoleWidth 30
+#define consoleHeight 20
 #define MAXLENGTH 1000
 
 
@@ -76,17 +76,27 @@ int compare_coordinates(Coordinates s1, Coordinates s2){
 	return 0;
 }
 
-void snake_presented(Snake snake, Bait &bait){
-	clrscr;
-	
+void draw_border(){
 	for(int i = 0; i < consoleHeight; i++){
 		gotoXY(consoleWidth, i);
 		putchar(179);
+		gotoXY(0, i);
+		putchar(179);
+		
 	}
 	for(int i = 0; i < consoleWidth; i++){
 		gotoXY(i, consoleHeight);
 		putchar(179);
+		gotoXY(i, 0);
+		putchar(179);
 	}
+}
+
+
+void snake_presented(Snake snake, Bait &bait){
+	clrscr;
+	
+	draw_border();
 	
 	gotoXY(bait.position.x, bait.position.y);
 	putchar('A');
@@ -149,14 +159,24 @@ void snake_behavior(Snake &snake){
 
 
 
-void snake_eating(Snake &snake, Bait &bait){
+int snake_eating(Snake &snake, Bait &bait){
+	srand(time(NULL));
 	if(compare_coordinates(snake.dot[0], bait.position)){	
 				
 		for (int i = snake.total_dot; i > 0; i--)
 			snake.dot[i] = snake.dot[i-1];
-					
+			
 		snake.total_dot++;
+		
+		bait.position.x = rand()%consoleWidth;
+		bait.position.y = rand()%consoleHeight;
 	}
+	
+	if(snake.dot[0].x == consoleWidth || snake.dot[0].y == consoleHeight){
+		return -1;
+	}
+	
+	return 0;
 }
 
 
@@ -172,27 +192,29 @@ int main(){
 	
 	snake_init(snake, bait);
 	
+	int code;
+	
 	
 	while(1){
 		system("cls");
 		
-		
 		snake_presented(snake, bait);
 		
+//		dieu khien
 		snake_behavior(snake);
-		
-//		xu ly cham bien
-
-		
 		
 //		xu ly trang thaii
 				
-		snake_eating(snake, bait);	
+		code = snake_eating(snake, bait);
 		
+//game OVER
 		
-//		dieu khien
-
-	
+		if(code == -1){
+			gotoXY(consoleWidth + 10, 10);
+			printf("GAME OVER");
+			break;
+		}
+		
 		
 		Sleep(200);
 		
